@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/proxy/clones.sol";
 import {IEntry} from "./interfaces/IEntry.sol";
 
 contract VaultFactory is Ownable {
-    using Clones for address; 
+    using Clones for address;
     Vault private vault;
     IEntry private entry;
 
@@ -26,6 +26,6 @@ contract VaultFactory is Ownable {
 
     function createVault() public {
         address newVault = address(vault).clone();
-        
+        entry.addVault(msg.sender, newVault);
     }
 }

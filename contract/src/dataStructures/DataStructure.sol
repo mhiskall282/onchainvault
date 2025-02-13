@@ -3,24 +3,25 @@ pragma solidity 0.8.28;
 
 contract DataStructure {
     // mapping(address => VaultParam)
-    enum PRIVACY{
-      PUBLIC,
-      PRIVATE
+    enum PRIVACY {
+        PUBLIC,
+        PRIVATE
     }
     struct UserProfile {
         string username;
         uint256 tokenId; // nftProfile id.
         address owner;
+        //bool exists;
         address[] vaults;
         PRIVACY privacy;
     }
-    
-    struct CreateGroup{
-      string name;
-      address[] members;
-      uint256 tokenId;
-      address[] vaults;
-       PRIVACY privacy;
+
+    struct CreateGroup {
+        string name;
+        address[] members;
+        uint256 tokenId;
+        address[] vaults;
+        PRIVACY privacy;
     }
 
     struct File {
