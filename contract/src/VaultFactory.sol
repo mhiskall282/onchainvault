@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/clones.sol";
 
 contract VaultFactory is Ownable {
-    using Clones for address; //thanks love.welcomeeeeeeeeeeee
+    using Clones for address; 
     Vault private vault;
 
     constructor() Ownable(msg.sender) {
