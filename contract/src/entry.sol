@@ -13,18 +13,22 @@ contract Entry is DataStructure {
     mapping(address => mapping(address => bool)) private access;
     mapping(address => address[]) private requests;
     mapping(string => bool) private usernames;
-    mapping(uint256 => CreateGroup) private group;
+    mapping(uint256 => CreateGroup[]) private group;
 
     modifier isNewUser(address) {
         require(
-            users[msg.sender].owner == address(0),
+            !users[msg.sender].exists,
             "Entry__Can_Not_Register_Same_account_Twice"
         );
         _;
     }
-
+modifier  onlyAccountOwner{
+   require(users[msg.sender].owner, "Entry__Must_Be_Owner");
+   _;
+}
     constructor() {}
 
+    event UserRegistered(address indexed user, string username);
     function connect(
         string memory _userName,
         uint256 _tokenId,
@@ -32,24 +36,32 @@ contract Entry is DataStructure {
     ) external isNewUser(msg.sender) {
         require(!usernames[_userName], "Entry__UserName_Taken");
 
-        UserProfile memory profile = UserProfile({
+        users[msg.sender] = UserProfile({
             username: _userName,
             tokenId: _tokenId,
             owner: msg.sender,
-            // exists: true,
+            exists: true,
             vaults: new address[](0),
             privacy: _privacy
         });
-        users[msg.sender] = profile;
+      //  users[msg.sender] = profile;
         usernames[_userName] = true;
-        exists = true;
+        emit UserRegistered(msg.sender, _userName);
+      //  exists = true;
     }
 
-    function addVault(
+    function addVaultToUser(
         address _user,
         address _vaultAddress
     ) internal /*onlyAuthorized*/ {
         users[_user].vaults.push(_vaultAddress);
+    }
+
+     function addVaultToGroup(
+        uint256 _groupId,
+        address _vaultAddress
+    ) internal /*onlyAuthorized*/ {
+        groups[_groupId].vaults.push(_vaultAddress);
     }
 
     function createGroup(
@@ -69,39 +81,63 @@ contract Entry is DataStructure {
         group[nextGroupId] = _group;
     }
 
+
+    function joinPublicGroup(uint256 _groupId) external {
+        CreateGroup storage _group = groups[_groupId];
+        require(_group.privacy == PRIVACY.PUBLIC, "Entry__Cannot_Join_Private_Group");
+        _group.members.push(msg.sender);
+    }
+
     function updateUserProfile(
         string memory _username,
         uint256 _tokenId,
         PRIVACY _privacy
-    ) external {
+    ) external onlyAccountOwner{
+        require(!usernames[_username], "Entry__UserName_Taken");
+
+        usernames[users[msg.sender].username] = false;
+
         users[msg.sender].username = _username;
         users[msg.sender].tokenId = _tokenId;
         users[msg.sender].privacy = _privacy;
+       usernames[_username] = true;
     }
 
     function getProfile() external view returns (UserProfile memory) {
         return users[msg.sender];
     }
 
-    function requestAccessToProfile(address _user) internal {
-        // access[msg.sender][_user] = true;
+    event AccessRequested(address indexed requester, address indexed target);
+    function requestAccessToProfile(address _user) internal onlyAccountOwner{
+       require(users[_user].exists, "Entry__User_Does_Not_Exist");
         requests[_user].push(msg.sender);
+       
+        // access[msg.sender][_user] = true;
+      emit AccessRequested(msg.sender, _user);
     }
 
-    function acceptRequest(address _user) external {
-        address[] storage _requests = requests[msg.sender];
-        for (uint256 i; i < _requests.length; i++) {
-            if (_requests[i] == _user) {
+  
+     function acceptRequest(address _user) external onlyAccountOwner {
+        address[] storage _request = requests[msg.sender];
+        for (uint256 i = 0; i < _request.length; i++) {
+            if (_request[i] == _user) {
                 access[msg.sender][_user] = true;
+                emit AccessGranted(msg.sender, _user);
+                
+                // Remove the request
+                userRequests[i] = userRequests[userRequests.length - 1];
+                userRequests.pop();
+                break;
             }
         }
     }
 
-    function removeFromProfileAccess(address _user) external {
+
+    function removeFromProfileAccess(address _user) external onlyAccountOwner {
         access[msg.sender][_user] = false;
     }
 
-    function updateProfilePicture(uint256 _tokenId) external {
+    function updateProfilePicture(uint256 _tokenId) external onlyAccountOwner{
         users[msg.sender].tokenId = _tokenId;
     }
 }

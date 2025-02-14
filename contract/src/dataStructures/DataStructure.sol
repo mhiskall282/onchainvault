@@ -11,7 +11,7 @@ contract DataStructure {
         string username;
         uint256 tokenId; // nftProfile id.
         address owner;
-        //bool exists;
+        bool exists;
         address[] vaults;
         PRIVACY privacy;
     }
