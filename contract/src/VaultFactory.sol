@@ -15,17 +15,18 @@ contract VaultFactory is Ownable {
         entry = IEntry(entryAddress);
     }
 
-    struct UserProfile {
-        string username;
-        uint256 tokenId; // nftProfile id.
-        address owner;
-        address[] vaults;
-    }
-
-    //  mapping()
+    //  event VaultCreate(address owner);
+    event SetEntry(address entry, uint256 date);
 
     function createVault() public {
         address newVault = address(vault).clone();
         entry.addVault(msg.sender, newVault);
     }
+
+    function setEntry(address entryAddress) external onlyOwner {
+        entry = IEntry(entryAddress);
+        emit SetEntry(entryAddress, date);
+    }
+
+    //  function DeleteVault() public {}
 }

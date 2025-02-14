@@ -105,15 +105,24 @@ upkeeping the popularity of your content......
 - reprogrammable data.
 
 ### Todo
+
 - monitization
 - during upload should specify if its paid or free
 - should specify the postage period
-- if long peirod , a fee will be taken from part of erning to presist
+- if long period , a fee will be taken from part of erning to presist
+  ------ postage ---- 10 ----- 0 res
+  ------ user 300 dollars ---- 10 pstage ---- 20---
+
+## MarketPlace
+
+-- create market -- onlyOwner
+
+-- partispate in market -- consumers can
+sell or consumer
 
 - reprogrammability
 - --still havent figured this one out
-- but vision is eg... maybe researchers in a group on our dapp can restrcuture rearrch, but the orginal of every restrect is respected.
+- but vision is eg... maybe researchers in a group on our dapp can restrcuture rearrch, but the orginal of every restructure is respected.
+
 - same as content and etc
-  
 - swarm integration(will contain a whole lot)
-  

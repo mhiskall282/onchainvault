@@ -7,6 +7,7 @@ contract DataStructure {
         PUBLIC,
         PRIVATE
     }
+
     struct UserProfile {
         string username;
         uint256 tokenId; // nftProfile id.
