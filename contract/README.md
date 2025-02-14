@@ -103,3 +103,17 @@ upkeeping the popularity of your content......
 - upload / Download - metadata, store decryption (locking user in),
 - Access control
 - reprogrammable data.
+
+### Todo
+- monitization
+- during upload should specify if its paid or free
+- should specify the postage period
+- if long peirod , a fee will be taken from part of erning to presist
+
+- reprogrammability
+- --still havent figured this one out
+- but vision is eg... maybe researchers in a group on our dapp can restrcuture rearrch, but the orginal of every restrect is respected.
+- same as content and etc
+  
+- swarm integration(will contain a whole lot)
+  
